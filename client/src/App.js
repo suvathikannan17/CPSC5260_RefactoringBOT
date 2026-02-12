@@ -12,10 +12,10 @@ function App() {
     setRefactoredCode('');
 
     try {
-      const response = await fetch('http://localhost:5001/refactor', {
+      const response = await fetch('http://localhost:5005/refactor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ code }),
+        body: JSON.stringify({ code: code }),
       });
 
       if (!response.ok) {
@@ -43,7 +43,7 @@ function App() {
             placeholder="Paste your code here..."
           />
 
-          <button type="submit" className="submit-btn" onClick={handleSubmit}>Refactor</button>
+          <button type="submit" className="submit-btn">Refactor</button>
 
           <textarea
             className = "code-textarea"
