@@ -7,11 +7,15 @@ function App() {
   const [error, setError] = useState('');
   const [fileExtension, setFileExtension] = useState('txt');
   const [originalName, setOriginalName] = useState('refactored_code');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if(!code) return;
+
     setError('');
     setRefactoredCode('');
+    setIsLoading(true);
 
     try {
       const response = await fetch('http://localhost:5005/refactor', {
@@ -29,6 +33,8 @@ function App() {
       setRefactoredCode(data.refactoredCode);
     } catch (err) {
       setError(err.message);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -91,7 +97,6 @@ function App() {
               className="code-textarea"
               value={code}
               onChange={(e) => {
-                // setCode(e.target.value);
                 const newCode = e.target.value;
                 setCode(newCode);
 
@@ -122,7 +127,9 @@ function App() {
           </div>
           
 
-          <button type="submit" className="submit-btn">Refactor</button>
+          <button type="submit" className="submit-btn" disabled={isLoading}>
+            {isLoading ? <div className="spinner"></div> : 'Refactor'}
+          </button>
 
           <div className="editor-wrapper">
             <textarea
