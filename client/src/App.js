@@ -5,7 +5,8 @@ function App() {
   const [code, setCode] = useState('');
   const [refactoredCode, setRefactoredCode] = useState('');
   const [error, setError] = useState('');
-  const [fileExtension, setFileExtension] = useState('');
+  const [fileExtension, setFileExtension] = useState('txt');
+  const [originalName, setOriginalName] = useState('refactored_code');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -36,9 +37,12 @@ function App() {
     if (!file) return;
 
     const nameParts = file.name.split('.');
-    const extension = nameParts.length > 1 ? nameParts.pop() : 'txt';
+    const extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'txt';
+
+    const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join('.') : nameParts[0];
     const validExtensions = ['js', 'java', 'py', 'cpp', 'c', 'cs', 'rb', 'go', 'ts'];
     setFileExtension(extension);
+    setOriginalName(baseName);
     
     if (!validExtensions.includes(extension)) {
       setError('Unsupported file type. Please upload a code file (e.g., .js, .java, .py).');
@@ -47,7 +51,7 @@ function App() {
     const reader = new FileReader();
     reader.onload = (event) => {
       setCode(event.target.result);
-      setError(''); // Clear any previous errors when a file is successfully loaded
+      setError('');
     };
     reader.readAsText(file);
   };
@@ -56,7 +60,16 @@ function App() {
     const element = document.createElement("a");
     const file = new Blob([refactoredCode], {type: 'text/plain'});
     element.href = URL.createObjectURL(file);
-    element.download = `refactored_code.${fileExtension}`;
+
+    let finalName;
+    if(originalName === 'refactored_code') {
+      finalName = `refactored_code.${fileExtension}`;
+    } else {
+      finalName = `${originalName}_refactored.${fileExtension}`;
+    }
+
+    element.download = finalName;
+    
     document.body.appendChild(element); 
     element.click();
     document.body.removeChild(element);
@@ -74,7 +87,14 @@ function App() {
             <textarea
               className="code-textarea"
               value={code}
-              onChange={(e) => setCode(e.target.value)}
+              onChange={(e) => {
+                setCode(e.target.value);
+                if(originalName !== 'refactored_code') {
+                  setOriginalName('refactored_code');
+                  setFileExtension('txt');
+                }
+                }
+              }
               placeholder="Paste your code here..."
             />
             <input 
