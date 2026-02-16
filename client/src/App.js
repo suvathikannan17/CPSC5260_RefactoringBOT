@@ -36,6 +36,9 @@ function App() {
     const file = e.target.files[0];
     if (!file) return;
 
+    setRefactoredCode('');
+    setError('');
+
     const nameParts = file.name.split('.');
     const extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'txt';
 
@@ -88,7 +91,13 @@ function App() {
               className="code-textarea"
               value={code}
               onChange={(e) => {
-                setCode(e.target.value);
+                // setCode(e.target.value);
+                const newCode = e.target.value;
+                setCode(newCode);
+
+                setRefactoredCode('');
+                setError('');
+
                 if(originalName !== 'refactored_code') {
                   setOriginalName('refactored_code');
                   setFileExtension('txt');
