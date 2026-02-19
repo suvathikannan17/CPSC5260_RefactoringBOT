@@ -9,6 +9,7 @@ function App() {
   const [fileExtension, setFileExtension] = useState('txt');
   const [originalName, setOriginalName] = useState('refactored_code');
   const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,6 +18,7 @@ function App() {
     setError('');
     setRefactoredCode('');
     setIsLoading(true);
+    setIsEditing(false);
 
     try {
       const response = await fetch('http://localhost:5005/refactor', {
@@ -89,7 +91,12 @@ function App() {
     setCode('');
     setRefactoredCode('');
     setError('');
+    setIsEditing(true);
   };
+
+  const handleEditOriginal = () => {
+    setIsEditing(true);
+  }
 
   return (
     <div className="App">
@@ -99,7 +106,7 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <div className="main-container">
-          {refactoredCode ? (
+          {(!isEditing && refactoredCode) ? (
             <div className = "full-diff-wrapper">
               <ReactDiffViewer 
                 oldValue={code}
@@ -160,6 +167,11 @@ function App() {
               </div> 
             <div className='full-diff-wrapper'>
               {refactoredCode ? (
+                isEditing ? (
+                  <div className='refactored-code-view'>
+                    <pre>{refactoredCode}</pre>
+                  </div>
+                ):(
                 <ReactDiffViewer 
                 oldValue={code}
                 newValue={refactoredCode}
@@ -179,7 +191,7 @@ function App() {
                   contentText: {fontSize: '14px', lineHeight: '20px'}
                 }}
               />
-              ) : (
+              )) : (
               <div> {isLoading ?  "Processing..." : "Refactored code will appear here..."}</div>
               )}
             </div>
@@ -190,7 +202,9 @@ function App() {
           
         {refactoredCode && (
           <div className='input-footer'>
-            <button type="button" className="secondary-btn" onClick={handleDownload} disabled={!refactoredCode}>
+            <button type='button' className='tertiary-btn' onClick={handleClear}>CLEAR</button>
+            <button type='button' className='tertiary-btn' onClick={handleEditOriginal}>EDIT ORIGINAL</button>
+            <button type="button" className="tertiary-btn" onClick={handleDownload} disabled={!refactoredCode}>
                 DOWNLOAD REFACTORED CODE
             </button>
           </div>
