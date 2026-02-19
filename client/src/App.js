@@ -85,9 +85,15 @@ function App() {
     document.body.removeChild(element);
   };
 
+  const handleClear = () => {
+    setCode('');
+    setRefactoredCode('');
+    setError('');
+  };
+
   return (
     <div className="App">
-      <h1 className='title'>Refactor BOT</h1>
+      <h1 className='title'>REFACTOR BOT</h1>
 
       {error && <div className="error-message">{error}</div>}
 
@@ -118,35 +124,40 @@ function App() {
           ) : (
             <>
             <div className='editor-wrapper'>
-              <h3 className='section-label'>Original Code</h3>
-                <textarea
-                      className="code-textarea"
-                      value={code}
-                      onChange={(e) => {
-                        setCode(e.target.value);
-                        if(originalName !== 'refactored_code') {
-                          setOriginalName('refactored_code');
-                          setFileExtension('txt');
-                        }}
-                      }
-                      placeholder="Paste your code here..."
-                    />
-              <div className='input-footer'>
-                <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
-                <button type="button" className="secondary-btn" onClick={() => document.getElementById('file-upload').click()}>
-                  Upload File
-                </button>
-              </div>
+              <div className = 'label-container'>
+                <h3 className='section-label'>Original Code</h3>
+                <button type='button' className='clear-btn' onClick={handleClear}>CLEAR</button>
+              </div>    
+              <textarea
+                    className="code-textarea"
+                    value={code}
+                    onChange={(e) => {
+                      setCode(e.target.value);
+                      if(originalName !== 'refactored_code') {
+                        setOriginalName('refactored_code');
+                        setFileExtension('txt');
+                      }}
+                    }
+                    placeholder="Paste your code here..."
+                  />
             </div>
 
           <div className='button-container'>
             <button type="submit" className="submit-btn" disabled={isLoading}>
-              {isLoading ? <div className="spinner"></div> : 'Refactor'}
+              {isLoading ? <div className="spinner"></div> : 'REFACTOR'}
             </button>
+            <div className='input-footer'>
+                <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
+                <button type="button" className="secondary-btn" onClick={() => document.getElementById('file-upload').click()}>
+                  UPLOAD FILE
+                </button>
+              </div>
           </div>
 
           <div className='editor-wrapper'>
-            <h3 className='section-label'>Refactored Code</h3>
+            <div className = 'label-container'>
+                <h3 className='section-label'>Refactored Code</h3>
+              </div> 
             <div className='full-diff-wrapper'>
               {refactoredCode ? (
                 <ReactDiffViewer 
@@ -169,9 +180,7 @@ function App() {
                 }}
               />
               ) : (
-              <div className='placeholder-box'>
-                {isLoading ?  "Processing..." : "Refactored code will appear here..."}
-              </div>
+              <div> {isLoading ?  "Processing..." : "Refactored code will appear here..."}</div>
               )}
             </div>
           </div>
@@ -182,7 +191,7 @@ function App() {
         {refactoredCode && (
           <div className='input-footer'>
             <button type="button" className="secondary-btn" onClick={handleDownload} disabled={!refactoredCode}>
-                Download Refactored Code
+                DOWNLOAD REFACTORED CODE
             </button>
           </div>
         )}
