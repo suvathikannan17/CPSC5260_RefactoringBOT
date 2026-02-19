@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
+import ReactDiffViewer from 'react-diff-viewer';
 
 function App() {
   const [code, setCode] = useState('');
@@ -92,61 +93,99 @@ function App() {
 
       <form onSubmit={handleSubmit}>
         <div className="main-container">
-          <div className="editor-wrapper">
-            <textarea
-              className="code-textarea"
-              value={code}
-              onChange={(e) => {
-                const newCode = e.target.value;
-                setCode(newCode);
+          {refactoredCode ? (
+            <div className = "full-diff-wrapper">
+              <ReactDiffViewer 
+                oldValue={code}
+                newValue={refactoredCode}
+                splitView={true}
+                leftTitle="Original Code"
+                rightTitle="Refactored Code"
+                styles={{
+                  variables: {
+                    diffViewerBackground: '#fff',
+                    addedBackground: 'transparent',
+                    wordAddedBackground: 'transparent',
+                    removedBackground: '#ffeef0',
+                    wordRemovedBackground: '#fdb8c0'
+                  },
+                  diffContainer: {width: '100%'},
+                  rightSide: {display: 'none'},
+                  contentText: {fontSize: '14px', lineHeight: '20px'}
+                }}
+              />
+            </div>
+          ) : (
+            <>
+            <div className='editor-wrapper'>
+              <h3 className='section-label'>Original Code</h3>
+                <textarea
+                      className="code-textarea"
+                      value={code}
+                      onChange={(e) => {
+                        setCode(e.target.value);
+                        if(originalName !== 'refactored_code') {
+                          setOriginalName('refactored_code');
+                          setFileExtension('txt');
+                        }}
+                      }
+                      placeholder="Paste your code here..."
+                    />
+              <div className='input-footer'>
+                <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
+                <button type="button" className="secondary-btn" onClick={() => document.getElementById('file-upload').click()}>
+                  Upload File
+                </button>
+              </div>
+            </div>
 
-                setRefactoredCode('');
-                setError('');
-
-                if(originalName !== 'refactored_code') {
-                  setOriginalName('refactored_code');
-                  setFileExtension('txt');
-                }
-                }
-              }
-              placeholder="Paste your code here..."
-            />
-            <input 
-              type="file" 
-              id="file-upload" 
-              style={{ display: 'none' }} 
-              onChange={handleFileUpload} 
-            />
-            <button 
-              type="button" 
-              className="submit-btn" 
-              onClick={() => document.getElementById('file-upload').click()}
-            >
-              Upload File
+          <div className='button-container'>
+            <button type="submit" className="submit-btn" disabled={isLoading}>
+              {isLoading ? <div className="spinner"></div> : 'Refactor'}
             </button>
           </div>
-          
 
-          <button type="submit" className="submit-btn" disabled={isLoading}>
-            {isLoading ? <div className="spinner"></div> : 'Refactor'}
-          </button>
-
-          <div className="editor-wrapper">
-            <textarea
-            className = "code-textarea"
-            value={refactoredCode}
-            onChange={(e) => setRefactoredCode(e.target.value)}
-            placeholder="Refactored code will appear here..."
-            />
-            <button 
-              type="button" 
-              className="submit-btn" 
-              onClick={handleDownload}
-              disabled={!refactoredCode}>
-                Download Refactored Code
-              </button>
-          </div>   
+          <div className='editor-wrapper'>
+            <h3 className='section-label'>Refactored Code</h3>
+            <div className='full-diff-wrapper'>
+              {refactoredCode ? (
+                <ReactDiffViewer 
+                oldValue={code}
+                newValue={refactoredCode}
+                splitView={true}
+                leftTitle="Original Code"
+                rightTitle="Refactored Code"
+                styles={{
+                  variables: {
+                    diffViewerBackground: '#fff',
+                    addedBackground: '#e6ffec',
+                    wordAddedBackground: '#acf2bd',
+                    removedBackground: 'transparent',
+                    wordRemovedBackground: 'transparent'
+                  },
+                  diffContainer: {width: '100%'},
+                  leftSide: {display: 'none'},
+                  contentText: {fontSize: '14px', lineHeight: '20px'}
+                }}
+              />
+              ) : (
+              <div className='placeholder-box'>
+                {isLoading ?  "Processing..." : "Refactored code will appear here..."}
+              </div>
+              )}
+            </div>
+          </div>
+          </>
+          )}
         </div>
+          
+        {refactoredCode && (
+          <div className='input-footer'>
+            <button type="button" className="secondary-btn" onClick={handleDownload} disabled={!refactoredCode}>
+                Download Refactored Code
+            </button>
+          </div>
+        )}
       </form>
     </div>
   );
