@@ -28,7 +28,7 @@
   display: flex;
   flex-direction: column;
   min-width: 0;
-  height: 600px;
+  height: 620px;
   align-items: center;
 }
 
@@ -42,7 +42,7 @@
 
 .code-textarea, .full-diff-wrapper, .placeholder-box {
   width: 100%;
-  height: 600px !important;
+  height: 500px !important;
   border: 1px solid #ddd;
   border-radius: 12px;
   background-color: #fff;
@@ -73,8 +73,10 @@
 
 .button-container {
   width: 150px;
+  height: 500px;
   display: flex;
   justify-content: center;
+  align-items: center;
   flex-shrink: 0;
 }
 
