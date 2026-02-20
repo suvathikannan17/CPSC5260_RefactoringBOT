@@ -21,7 +21,7 @@ function App() {
     setIsEditing(false);
 
     try {
-      const response = await fetch('http://localhost:5005/refactor', {
+      const response = await fetch('http://localhost:5006/refactor', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ code: code }),
@@ -91,7 +91,9 @@ function App() {
     setCode('');
     setRefactoredCode('');
     setError('');
-    setIsEditing(true);
+    setIsEditing(false);
+    setOriginalName('refactored_code');
+    setFileExtension('txt');
   };
 
   const handleEditOriginal = () => {
@@ -146,7 +148,12 @@ function App() {
                       }}
                     }
                     placeholder="Paste your code here..."
-                  />
+              />
+              {originalName !== 'refactored_code' && (
+                <div className='file-info'>
+                  <span>Uploaded: {originalName}.{fileExtension}</span>
+                </div>
+              )}
             </div>
 
           <div className='button-container'>
@@ -158,7 +165,7 @@ function App() {
                 <button type="button" className="secondary-btn" onClick={() => document.getElementById('file-upload').click()}>
                   UPLOAD FILE
                 </button>
-              </div>
+            </div>
           </div>
 
           <div className='editor-wrapper'>
