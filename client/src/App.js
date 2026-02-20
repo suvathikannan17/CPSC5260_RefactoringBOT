@@ -10,6 +10,7 @@ function App() {
   const [originalName, setOriginalName] = useState('refactored_code');
   const [isLoading, setIsLoading] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
+  const [justification, setJustification] = useState('');
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,6 +35,7 @@ function App() {
 
       const data = await response.json();
       setRefactoredCode(data.refactoredCode);
+      setJustification(data.justification || '');
     } catch (err) {
       setError(err.message);
     } finally {
@@ -91,6 +93,7 @@ function App() {
     setCode('');
     setRefactoredCode('');
     setError('');
+    setJustification('');
     setIsEditing(false);
     setOriginalName('refactored_code');
     setFileExtension('txt');
@@ -107,6 +110,7 @@ function App() {
       {error && <div className="error-message">{error}</div>}
 
       <form onSubmit={handleSubmit}>
+        <div className='layout'>
         <div className="main-container">
           {(!isEditing && refactoredCode) ? (
             <div className = "full-diff-wrapper">
@@ -203,6 +207,17 @@ function App() {
           </div>
           </>
           )}
+        </div>
+        {refactoredCode && !isEditing && (
+          (
+            <div className='justification-container'>
+              <h3 className='justification-title'>Refactoring Justification</h3>
+              <div className='justification-wrapper'>
+                <pre className='justification-text'>{justification || "No smells detected."}</pre>
+              </div>
+            </div>
+          )
+        )}
         </div>
           
         {refactoredCode && (

@@ -18,7 +18,11 @@ app.use((req, res, next) => {
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
 const model = genAI.getGenerativeModel({
     model: "models/gemini-2.5-flash",
-    systemInstruction: "You are a professional code refactorer. Output ONLY the refactored code. No explanations, no markdown code blocks (```), and no conversational text."
+    systemInstruction: `You are an expert Software design auditor and refactoring assistant. 
+    Your task is to 
+    1. analyze the provided code and detect the code smells (Example: Long method, Long parameter list, Magic number, Duplicate code, Feature envy etc).
+    2. Refactor the code to eliminate the detected code smells using standard refactoring techniques such as Extrat method, replace magic number with constact etc.. and improve readability and maintainability.
+    3. Return a JSON object with two fields: "refactoredCode" containing the refactored code, and "justification" containing a brief explanation of the refactoring changes made and the code smells that were addressed.`
     });
 
 app.get('/getmodels', async (req, res) => {
@@ -38,13 +42,30 @@ app.post('/refactor', async (req, res) => {
     if (!code) {
         return res.status(400).json({ error: 'Code is required' });
     }
-    
-    const prompt = `Refactor the following code to improve readability and maintainability:\n\n${code}`;
-    const result = await model.generateContent(prompt);
-    const response = await result.response;
+    try {
+        const prompt = `Identify all the code smells in the following code and refactor it to improve readability and maintainability. 
+        Format your justification in a clear and concise way, explaining each refactoring change made and the code smell that was addressed and include code line number
+        
+        CODE: ${code}
 
-    res.json({ refactoredCode: response.text() });
-});
+        RESPONSE FORMAT (JSON ONLY):
+        {
+        "refactoredCode": "The refactored code goes here",
+        "justification": "[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers]\n\n[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers]\n..."
+        }`;
+
+        const result = await model.generateContent(prompt);
+        const response = await result.response.text();
+
+        const cleanJson = response.replace(/```json|```/g, '').trim();
+        const data = JSON.parse(cleanJson);
+
+        res.json({ refactoredCode: data.refactoredCode, justification: data.justification });
+    } catch (error) {
+        console.error("Error during refactoring:", error);
+        res.status(500).json({ error: 'Error processing the code. Please try again later.' });
+    }
+    });
 
 app.listen(PORT, () => {
   console.log(`Server is running at http://localhost:${PORT}`);
