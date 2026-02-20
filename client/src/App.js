@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import './App.css';
-import ReactDiffViewer from 'react-diff-viewer';
+import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
 
 function App() {
   const [code, setCode] = useState('');
@@ -114,19 +114,20 @@ function App() {
                 oldValue={code}
                 newValue={refactoredCode}
                 splitView={true}
+                compareMethod={DiffMethod.LINES}
                 leftTitle="Original Code"
                 rightTitle="Refactored Code"
                 styles={{
                   variables: {
-                    diffViewerBackground: '#fff',
                     addedBackground: 'transparent',
                     wordAddedBackground: 'transparent',
                     removedBackground: '#ffeef0',
-                    wordRemovedBackground: '#fdb8c0'
+                    wordRemovedBackground: '#ffeef0'
                   },
                   diffContainer: {width: '100%'},
                   rightSide: {display: 'none'},
-                  contentText: {fontSize: '14px', lineHeight: '20px'}
+                  contentText: {fontSize: '14px', lineHeight: '20px'},
+                  titleBlock: {fontSize: '24px', fontWeight: 'bold', padding: '10px', fontFamily: "Great Vibes, cursive", color: '#4a5568' }
                 }}
               />
             </div>
@@ -142,11 +143,7 @@ function App() {
                     value={code}
                     onChange={(e) => {
                       setCode(e.target.value);
-                      if(originalName !== 'refactored_code') {
-                        setOriginalName('refactored_code');
-                        setFileExtension('txt');
-                      }}
-                    }
+                    }}
                     placeholder="Paste your code here..."
               />
               {originalName !== 'refactored_code' && (
@@ -183,13 +180,14 @@ function App() {
                 oldValue={code}
                 newValue={refactoredCode}
                 splitView={true}
+                compareMethod={DiffMethod.LINES}
                 leftTitle="Original Code"
                 rightTitle="Refactored Code"
                 styles={{
                   variables: {
-                    diffViewerBackground: '#fff',
                     addedBackground: '#e6ffec',
-                    wordAddedBackground: '#acf2bd',
+                    // wordAddedBackground: '#acf2bd',
+                    wordAddedBackground: '#e6ffec',
                     removedBackground: 'transparent',
                     wordRemovedBackground: 'transparent'
                   },
