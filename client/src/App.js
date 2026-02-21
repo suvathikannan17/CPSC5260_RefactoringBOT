@@ -37,6 +37,11 @@ function App() {
         throw new Error(errorData.error || 'Unknown error occurred');
       }
 
+      const codeRegex = /[{}();=]/;
+      if(!code.trim() || !codeRegex.test(code)) {
+        throw new Error('Invalid code format. Please check your input and try again.');
+      }
+
       const data = await response.json();
       if (!data.refactoredCode) {
         throw new Error('Invalid response from server: Missing refactored code');
@@ -231,7 +236,7 @@ function App() {
         )}
         </div>
           
-        {refactoredCode && (
+        {refactoredCode && !isEditing && (
           <div className='input-footer'>
             <button type='button' className='tertiary-btn' onClick={handleClear}>CLEAR</button>
             <button type='button' className='tertiary-btn' onClick={handleEditOriginal}>EDIT ORIGINAL</button>

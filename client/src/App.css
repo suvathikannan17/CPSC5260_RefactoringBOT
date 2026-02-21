@@ -1,21 +1,22 @@
 body, html {
   margin: 0;
   padding: 0;
-  height: 100vh;
-  overflow: hidden;
+  height: 100%;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .App {
   text-align: center;
   background-color: #f9edf2;
-  max-height: 100vh;
+  min-height: 100vh;
   font-family: 'Great Vibes', cursive;
   letter-spacing: 1.5px;
   overflow: hidden;
 }
 
 .title {
-  font-size: 2.5em;
+  font-size: 2em;
   color: #e15892;
   margin-bottom: 10px;
   font-family: 'Great Vibes', cursive;
@@ -24,25 +25,30 @@ body, html {
 .layout {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   gap: 10px;
   width: 98%;
   margin: 0 auto;
   align-items: flex-start;
   padding-bottom: 40px;
+  overflow: auto;
 }
 
 .main-container {
   display: flex;
-  flex: 3;
+  flex: 1;
   flex-direction: row;
+  flex-wrap: wrap;
   align-items: center;
   justify-content: center;
   gap: 20px;
   margin: 0;
+  min-width: 0;
 }
 
 .editor-wrapper {
-  flex: 1;
+  flex: 1 1 500px;
+  min-height: 400px;
   display: flex;
   flex-direction: column;
   min-width: 0;
@@ -250,7 +256,8 @@ body, html {
 }
 
 .justification-container {
-  flex: 0.8;
+  flex: 0 1 300px;
+  width: 300px;
   margin-top: 0;
   background: #ffffff;
   border: 1px solid #ddd;
@@ -261,7 +268,7 @@ body, html {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 4px 10px rgba(225, 888, 146, 0.1);
+  box-shadow: 0 4px 10px rgba(225, 88, 146, 0.1);
 }
 
 .justification-title {
