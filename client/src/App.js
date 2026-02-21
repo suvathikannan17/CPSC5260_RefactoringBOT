@@ -120,6 +120,25 @@ function App() {
     setIsEditing(true);
   }
 
+  const handleDownloadJustification = () => {
+    const element = document.createElement("a");
+    const file = new Blob([justification], {type: 'text/plain'});
+    element.href = URL.createObjectURL(file);
+
+    let finalName;
+    if(originalName === 'refactored_code') {
+      finalName = `refactoring_justification.txt`;
+    } else {
+      finalName = `${originalName}_refactoring_justification.txt`;
+    }
+
+    element.download = finalName;
+    
+    document.body.appendChild(element); 
+    element.click();
+    document.body.removeChild(element);
+  };
+
   return (
     <div className="App">
       <h1 className='title'>REFACTOR BOT</h1>
@@ -242,6 +261,9 @@ function App() {
             <button type='button' className='tertiary-btn' onClick={handleEditOriginal}>EDIT ORIGINAL</button>
             <button type="button" className="tertiary-btn" onClick={handleDownload} disabled={!refactoredCode}>
                 DOWNLOAD REFACTORED CODE
+            </button>
+            <button type="button" className="tertiary-btn" onClick={handleDownloadJustification} disabled={!justification}>
+                DOWNLOAD REFACTORED JUSTIFICATION
             </button>
           </div>
         )}
