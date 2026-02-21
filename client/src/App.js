@@ -14,10 +14,14 @@ function App() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if(!code) return;
+    if(!code.trim()) {
+      setError('Please enter or upload code to refactor.');
+      return;
+    };
 
     setError('');
     setRefactoredCode('');
+    setJustification('');
     setIsLoading(true);
     setIsEditing(false);
 
@@ -34,10 +38,15 @@ function App() {
       }
 
       const data = await response.json();
+      if (!data.refactoredCode) {
+        throw new Error('Invalid response from server: Missing refactored code');
+      }
+
       setRefactoredCode(data.refactoredCode);
       setJustification(data.justification || '');
     } catch (err) {
-      setError(err.message);
+      const errorMessage = err.message === 'Failed to fetch' ? 'An error occurred while processing your request. Please try again later.' : err.message;
+      setError(errorMessage);
     } finally {
       setIsLoading(false);
     }
@@ -54,15 +63,18 @@ function App() {
     const extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'txt';
 
     const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join('.') : nameParts[0];
-    const validExtensions = ['js', 'java', 'py', 'cpp', 'c', 'cs', 'rb', 'go', 'ts'];
+    const validExtensions = ['js', 'java', 'py', 'cpp', 'c', 'cs', 'rb', 'go', 'ts', 'txt'];
     setFileExtension(extension);
     setOriginalName(baseName);
     
     if (!validExtensions.includes(extension)) {
-      setError('Unsupported file type. Please upload a code file (e.g., .js, .java, .py).');
+      setError('Unsupported file type. Please upload a suppported code file (js, java, py, cpp, c, cs, rb, go, ts, txt).');
       return;
     }
     const reader = new FileReader();
+    reader.onerror = () => {
+      setError('Failed to read file. Please try again.');
+    }
     reader.onload = (event) => {
       setCode(event.target.result);
       setError('');
@@ -190,7 +202,6 @@ function App() {
                 styles={{
                   variables: {
                     addedBackground: '#e6ffec',
-                    // wordAddedBackground: '#acf2bd',
                     wordAddedBackground: '#e6ffec',
                     removedBackground: 'transparent',
                     wordRemovedBackground: 'transparent'
