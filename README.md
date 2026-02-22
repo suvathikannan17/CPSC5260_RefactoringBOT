@@ -27,25 +27,26 @@ Create it: Click "Get API key" on the left side bar and then click "Create API k
 
 Save it: Once it is created, copy that long string of letters and numbers.
 
-Hide it: Create a file named .prod.env in the project folder. Add this line:
-GEMINI_API_KEY=your_key_here
+Hide it: Create a file named prod.env in the project folder. Add this line:
+GEMINI_API_KEY=<<your_key_here>>
 
 # Running it on your machine
 
 **Server (Node.js)**
-
+```
 npm install
 
 node index.js
+```
 
-The backend will start up on port 5005.
+The backend will start up on port 5006.
 
 **Client (React)**
-
+```
 npm install
 
 npm start
-
+```
 Browser should pop open a tab at localhost:3000 with the Refactor BOT UI.
 
 # Tech I Used
