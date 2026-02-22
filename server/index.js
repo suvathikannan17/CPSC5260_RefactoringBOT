@@ -28,8 +28,7 @@ const model = genAI.getGenerativeModel({
     CRITICAL AUDIT RULES: 
     - MEASUREMENT: Define a 'Long Method' strictly by logical lines of code (statements). Ignore all empty lines, comments, and whitespace when calculating method length. 
     - WHITESPACE: Excessive whitespace or empty lines are NOT code smells and should not be refactored or cited in justifications. 
-    - DUPLICATION: Identify identical or near-identical logic across different functions and extract them into reusable helper methods. 
-    - JUSTIFICATION FORMAT: Use the exact format: [Line Number] - [Smell Name] - [Simple description of the fix].`
+    - DUPLICATION: Identify identical or near-identical logic across different functions and extract them into reusable helper methods.`
     });
 
 app.get('/getmodels', async (req, res) => {
@@ -58,7 +57,7 @@ app.post('/refactor', async (req, res) => {
         RESPONSE FORMAT (JSON ONLY):
         {
         "refactoredCode": "The refactored code goes here",
-        "justification": "[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers]\n\n[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers]\n..."
+        "justification": "[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n..."
         }`;
 
         const result = await model.generateContent(prompt);

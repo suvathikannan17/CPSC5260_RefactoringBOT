@@ -68,7 +68,7 @@ function App() {
     const extension = nameParts.length > 1 ? nameParts[nameParts.length - 1] : 'txt';
 
     const baseName = nameParts.length > 1 ? nameParts.slice(0, -1).join('.') : nameParts[0];
-    const validExtensions = ['js', 'java', 'py', 'cpp', 'c', 'cs', 'rb', 'go', 'ts', 'txt'];
+    const validExtensions = ['js', 'java', 'py', 'cpp', 'c', 'cs', 'rb', 'go', 'ts', 'rs', 'txt'];
     setFileExtension(extension);
     setOriginalName(baseName);
     
