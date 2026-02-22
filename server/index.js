@@ -58,6 +58,7 @@ app.post('/refactor', async (req, res) => {
         {
         "refactoredCode": "The refactored code goes here",
         "justification": "[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n..."
+        "status": "If the code input is valid, return 'success'. If the given code is not a programming language or has systax error, or does not make sense, return 'InvalidCodeException' as errorCode and justification of error in 'errorMessage' as json"
         }`;
 
         const result = await model.generateContent(prompt);
@@ -69,11 +70,17 @@ app.post('/refactor', async (req, res) => {
         }
 
         const data = JSON.parse(cleanJson);
+        console.log("status", data.status);
+        if (data.status === 'InvalidCodeException') {
+            return res.status(400).json({ error: data.errorMessage || 'Invalid code input' });
+        }
 
         res.json({ refactoredCode: data.refactoredCode, justification: data.justification });
     } catch (error) {
         console.error("Error during refactoring:", error);
-        res.status(500).json({ error: 'Error processing the code. Please try again later.' });
+        res.status(500).json({
+            error: `Error processing the code. Please try again later. ${error.name} : ${error.statusText || error.message}`,
+        });
     }
     });
 
