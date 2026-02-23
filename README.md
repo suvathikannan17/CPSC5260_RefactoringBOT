@@ -28,33 +28,67 @@ Create it: Click "Get API key" on the left side bar and then click "Create API k
 Save it: Once it is created, copy that long string of letters and numbers.
 
 Hide it: Create a file named prod.env in the project folder. Add this line:
+```
 GEMINI_API_KEY=<<your_key_here>>
+```
 
 # Running it on your machine
 
 **Server (Node.js)**
+Navigate to the server directory.
+
+Install the base dependencies:
 ```
 npm install
-
-node index.js
 ```
 
-The backend will start up on port 5006.
+Install required middleware for API security and functionality:
+```
+npm install express cors dotenv
+```
+
+Install development tools to allow the server to auto-restart when you update code:
+```
+npm install --save-dev nodemon
+```
+
+Start the backend service:
+```
+npx nodemon index.js
+```
+
+Note: The backend will start up on port 5006.
 
 **Client (React)**
-```
-npm install
+Navigate to the client directory.
 
+Install dependencies using the legacy flag to ensure compatibility with React 19:
+```
+npm install --legacy-peer-deps
+```
+
+Why this flag? It tells NPM to ignore "peer dependency" conflicts between React 19 and older plugins like react-diff-viewer.
+
+Install the icon library:
+```
+npm install lucide-react --legacy-peer-deps
+```
+
+Launch the UI:
+```
 npm start
 ```
-Browser should pop open a tab at localhost:3000 with the Refactor BOT UI.
+
+Note: Your browser should automatically open to localhost:3000.
 
 # Tech I Used
 
-Frontend: React.js
+Frontend: React.js (v19.2.4)
 
-Backend: Node.js & Express
+Backend: Node.js & Express (v24.13.0)
 
-AI Engine: Google Gemini API
+AI Engine: Google Gemini API (Model - Gemini-2.5-flash)
+
+Icons: Lucide-React (v0.575.0)
 
 Styling: Custom CSS with Google Fonts
