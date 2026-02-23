@@ -43,24 +43,19 @@ app.get('/getmodels', async (req, res) => {
     }
 });
 
+const fs = require('fs').promises;
+const path = require('path');
+
 app.post('/refactor', async (req, res) => {
     const { code } = req.body;
     if (!code) {
         return res.status(400).json({ error: 'Code is required' });
     }
     try {
-        const prompt = `Identify all the code smells in the following code and refactor it to improve readability and maintainability. 
-        Format your justification in a clear and concise way, explaining each refactoring change made and the code smell that was addressed and include code line number
+        const templatePath = path.join(__dirname, 'prompt.md');
+        let prompt = await fs.readFile(templatePath, 'utf-8');
+        prompt = prompt.replace('{CODE}', code);
         
-        CODE: ${code}
-
-        RESPONSE FORMAT (JSON ONLY):
-        {
-        "refactoredCode": "The refactored code goes here",
-        "justification": "[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n[Line] - [Smell Name] - [Description of where it was and how it was fixed, including line numbers\n\n]\n\n..."
-        "status": "If the code input is valid, return 'success'. If the given code is not a programming language or has systax error, or does not make sense, return 'InvalidCodeException' as errorCode and justification of error in 'errorMessage' as json"
-        }`;
-
         const result = await model.generateContent(prompt);
         const response = await result.response.text();
 
@@ -79,7 +74,7 @@ app.post('/refactor', async (req, res) => {
     } catch (error) {
         console.error("Error during refactoring:", error);
         res.status(500).json({
-            error: `Error processing the code. Please try again later. ${error.name} : ${error.statusText || error.message}`,
+            error: `Error processing the code. Please try again later. ${error.name} : ${error.statusText || data.status}`,
         });
     }
     });
