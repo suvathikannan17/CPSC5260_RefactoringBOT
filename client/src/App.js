@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import './App.css';
 import ReactDiffViewer, { DiffMethod } from 'react-diff-viewer';
+import { Upload } from 'lucide-react';
 
 function App() {
   const [code, setCode] = useState('');
@@ -195,7 +196,7 @@ function App() {
             <div className='input-footer'>
                 <input type="file" id="file-upload" style={{ display: 'none' }} onChange={handleFileUpload} />
                 <button type="button" className="secondary-btn" onClick={() => document.getElementById('file-upload').click()}>
-                  UPLOAD FILE
+                  <Upload className="upload-icon" size={20} strokeWidth={3}/>UPLOAD FILE
                 </button>
             </div>
           </div>
